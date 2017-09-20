@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='dynamo',
+    name='dynamo-mypy',
     version='0.0.1',
     description='remove annotations',
     author='Alexander Ivanov',

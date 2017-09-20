@@ -10,3 +10,11 @@ dynamo a.py b.py
 * Removes -> t
 * Removes from typing import t
 * Removes import typing
+
+## install
+
+```bash
+pip install dynamo-mypy
+```
+
+todo: fixes, tests
