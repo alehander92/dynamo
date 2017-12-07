@@ -37,5 +37,8 @@ class Remover(ast.NodeTransformer):
             return None
         return node
 
-
-    
+    def visit_Assign(self, node: ast.Assign) -> Optional[ast.AST]:
+        if isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Call) and \
+           isinstance(node.value.func, ast.Name) and node.value.func.id == 'TypedDict':
+            return ast.parse('class %s: pass' % node.targets[0].id)
+        return node
