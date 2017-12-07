@@ -33,7 +33,7 @@ class Remover(ast.NodeTransformer):
         return node
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> Optional[ast.AST]:
-        if node.module == 'typing':
+        if node.module == 'typing' or node.module == 'mypy_extension':
             return None
         return node
 
