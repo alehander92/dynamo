@@ -18,6 +18,8 @@ def compile_ast(node: ast.AST) -> ast.AST:
 class Compiler(ast.NodeTransformer):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Optional[ast.AST]:
         self.visit(node.args)
+        for child in node.body:
+            self.visit(child)
         if node.returns is not None:
             node.returns = None
         return node
@@ -42,3 +44,22 @@ class Compiler(ast.NodeTransformer):
            isinstance(node.value.func, ast.Name) and node.value.func.id == 'TypedDict':
             return ast.parse('class %s: pass' % node.targets[0].id)
         return node
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> Optional[ast.AST]:
+        return None
+
+    def visit_JoinedStr(self, node: ast.JoinedStr) -> Optional[ast.AST]:
+        elements = []
+        for value in node.values:
+            if isinstance(value, ast.FormattedValue):
+                elements.append(ast.Call(ast.Name('str'), [value.value], []))
+            elif isinstance(value, ast.Str):
+                elements.append(value)
+            else:
+                elements.append(ast.Call(ast.Name('str'), [value]))
+        return ast.Call(
+            ast.Attribute(
+                ast.Str(''),
+                'join'), [
+                ast.List(elements)], [])
+
